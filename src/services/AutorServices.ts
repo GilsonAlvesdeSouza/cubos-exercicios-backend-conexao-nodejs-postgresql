@@ -1,5 +1,6 @@
 import { Autor, Livro } from "../schemas";
 import { dbConnect } from "../pg_connect";
+import { object } from "zod";
 
 class AutorServices {
 	async all() {
@@ -19,14 +20,40 @@ class AutorServices {
 	}
 
 	async getByIdAutor(id: number) {
-		const query = `select * from autores where id = $1`;
+		const query = `select a.nome as nome_autor, a.idade, l.* from autores a 
+		join livros l on l.id_autor = a.id where a.id = $1`;
 		const params = [id];
 		const result = await dbConnect.query(query, params);
-		const autor: Autor = result.rows[0];
-		return autor;
+
+		let autorLivros: any = {
+			id: result.rows[0].id_autor,
+			nome: result.rows[0].nome_autor,
+			idade: result.rows[0].idade,
+		};
+
+		let livros: object[] = [];
+
+		for (const autor of result.rows) {
+			livros.push({
+				id: autor.id,
+				nome: autor.nome,
+				genero: autor.genero,
+				editora: autor.editora,
+				data_publicacao: autor.data_publicacao,
+			});
+		}
+		autorLivros.livro = livros;
+		
+		return autorLivros;
 	}
 
-	async saveBook({ nome, genero, editora, dataPublicacao, idAutor }: Livro) {
+	async saveBook({
+		nome,
+		genero,
+		editora,
+		data_publicacao: dataPublicacao,
+		idAutor,
+	}: Livro) {
 		const query = `insert into livros (nome, genero, editora, data_publicacao, id_autor)
 		values($1, $2, $3, $4, $5) returning id;`;
 		const params = [nome, genero, editora, dataPublicacao, idAutor];

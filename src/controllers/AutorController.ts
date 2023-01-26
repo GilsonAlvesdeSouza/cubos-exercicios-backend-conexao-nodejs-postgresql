@@ -39,12 +39,12 @@ class AutorController {
 
 	async createBook(req: Request, res: Response) {
 		const id = req.params.id;
-		const { nome, genero, editora, dataPublicacao }: Livro = req.body;
+		const { nome, genero, editora, data_publicacao }: Livro = req.body;
 		const livro = LivroSchema.safeParse({
 			nome,
 			genero,
 			editora,
-			dataPublicacao: new Date(dataPublicacao),
+			dataPublicacao: new Date(data_publicacao),
 			idAutor: Number(id),
 		});
 

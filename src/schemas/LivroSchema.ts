@@ -26,7 +26,7 @@ const LivroSchema = z.object({
 		})
 		.trim()
 		.optional(),
-	dataPublicacao: z.date({
+	data_publicacao: z.date({
 		required_error: "A data da publicação é obrigatória.",
 		invalid_type_error: "A data da publicação no formato YYYY-MM-DD.",
 	}),
