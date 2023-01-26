@@ -60,6 +60,11 @@ class AutorController {
 		console.log(novoLivro);
 		res.status(201).json({ novoLivro });
 	}
+
+	async showBook(req: Request, res: Response) {
+		const livros = await autorServices.allBooks();
+		res.status(200).json(livros);
+	}
 }
 
 export { AutorController };

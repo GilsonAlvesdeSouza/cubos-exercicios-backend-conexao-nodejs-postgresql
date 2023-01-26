@@ -43,7 +43,7 @@ class AutorServices {
 			});
 		}
 		autorLivros.livro = livros;
-		
+
 		return autorLivros;
 	}
 
@@ -69,6 +69,32 @@ class AutorServices {
 		const result = await dbConnect.query(query, params);
 		const livro: Livro = result.rows[0];
 		return livro;
+	}
+
+	async allBooks() {
+		const query = `select a.nome as nome_autor, a.idade, l.* from autores a 
+		join livros l on l.id_autor = a.id`;
+
+		const result = await dbConnect.query(query);
+
+		let livros: object[] = [];
+
+		for (const autor of result.rows) {
+			livros.push({
+				id: autor.id,
+				nome: autor.nome,
+				genero: autor.genero,
+				editora: autor.editora,
+				data_publicacao: autor.data_publicacao,
+				autor: {
+					id: autor.id_autor,
+					nome: autor.nome_autor,
+					idade: autor.idade,
+				},
+			});
+		}
+
+		return livros;
 	}
 }
 

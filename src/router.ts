@@ -1,6 +1,5 @@
 import { Router } from "express";
 import { AutorController } from "./controllers/AutorController";
-import { dbConnect } from "./pg_connect";
 
 const autorController = new AutorController();
 
@@ -10,5 +9,6 @@ router .get("/autor", autorController.index)
 router.post("/autor", autorController.store);
 router.get("/autor/:id", autorController.show);
 router.post("/autor/:id/livro", autorController.createBook);
+router.get("/livro", autorController.showBook)
 
 export { router };
