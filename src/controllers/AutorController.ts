@@ -7,17 +7,16 @@ const autorServices = new AutorServices();
 
 class AutorController {
 	async store(req: Request, res: Response) {
-		const { nome, idade } = req.body;
-
+		const { nome, idade }: Autor = req.body;
 		const autor = AutorSchema.safeParse({ nome, idade });
 
 		if (!autor.success) {
 			return res.json({ mensagem: autor.error.issues[0].message });
 		}
 
-		const result = await autorServices.save(autor.data);
+		const novoAutor = await autorServices.save(autor.data);
 
-		return res.status(201).json(result);
+		return res.status(201).json(novoAutor);
 	}
 
 	async show(req: Request, res: Response) {
