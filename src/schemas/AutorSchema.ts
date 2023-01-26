@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 const AutorSchema = z.object({
-	id: z.number().optional(),
+	id: z.number({invalid_type_error:"O identificador precisa ser um número"}).optional(),
 	nome: z
 		.string({
 			required_error: "O campo nome é Obrigatório.",
