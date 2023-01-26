@@ -1,3 +1,3 @@
-import { AutorInterface } from "./AutorInterface";
+import { Autor, AutorSchema } from "./AutorSchema";
 
-export { AutorInterface };
+export {Autor, AutorSchema };

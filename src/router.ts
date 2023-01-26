@@ -7,5 +7,6 @@ const autorController = new AutorController();
 const router = Router();
 
 router.post("/autor", autorController.store);
+router.get("/autor/:id", autorController.show);
 
 export { router };

@@ -1,17 +1,33 @@
 import { Request, Response } from "express";
-import { AutorInterface } from "../interfaces";
+import { ApiError } from "../helpers/api-errors";
+import { Autor, AutorSchema } from "../schemas";
 import { AutorServices } from "../services/AutorServices";
 
 const autorServices = new AutorServices();
 
 class AutorController {
 	async store(req: Request, res: Response) {
-		const { nome, idade }: Partial<AutorInterface> = req.body;
+		const { nome, idade } = req.body;
 
-		const autor = { nome, idade };
+		const autor = AutorSchema.safeParse({ nome, idade });
 
-		const newAutor = await autorServices.save(autor);
-		return res.status(201).json(newAutor);
+		if (!autor.success) {
+			return res.json({ mensagem: autor.error.issues[0].message });
+		}
+
+		const result = await autorServices.save(autor.data);
+
+		return res.status(201).json(result);
+	}
+
+	async show(req: Request, res: Response) {
+		const id = req.params.id;
+		const autor = await autorServices.getById(Number(id));
+
+		if (!autor) {
+			throw new ApiError("Autor não encontrado.", 404);
+		}
+		return res.status(200).json(autor);
 	}
 }
 
