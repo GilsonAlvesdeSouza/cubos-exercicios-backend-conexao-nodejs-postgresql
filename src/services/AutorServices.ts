@@ -1,7 +1,5 @@
 import { Autor, Livro } from "../schemas";
 import { dbConnect } from "../pg_connect";
-import { object } from "zod";
-
 class AutorServices {
 	async all() {
 		const query = `select * from autores;`;
@@ -11,11 +9,11 @@ class AutorServices {
 	}
 
 	async save({ nome, idade }: Autor) {
-		const query = `insert into autores (nome, idade) values($1, $2) returning id;`;
+		const query = `insert into autores (nome, idade) values($1, $2) returning *;`;
+
 		const params = [nome, idade];
 		const result = await dbConnect.query(query, params);
-		const id = result.rows[0].id;
-		const autor = this.getByIdAutor(id);
+		const autor = result.rows[0];
 		return autor;
 	}
 
@@ -24,27 +22,36 @@ class AutorServices {
 		join livros l on l.id_autor = a.id where a.id = $1`;
 		const params = [id];
 		const result = await dbConnect.query(query, params);
+		if (result.rowCount !== 0) {
+			type AutorLivrosType = {
+				id: number;
+				nome: string;
+				idade: number;
+				livros: Partial<Array<Livro>>;
+			};
 
-		let autorLivros: any = {
-			id: result.rows[0].id_autor,
-			nome: result.rows[0].nome_autor,
-			idade: result.rows[0].idade,
-		};
+			let livros: any = [];
+			for (const livro of result.rows) {
+				livros.push({
+					id: livro.id,
+					nome: livro.nome,
+					genero: livro.genero,
+					editora: livro.editora,
+					data_publicacao: livro.data_publicacao,
+				});
+			}
 
-		let livros: object[] = [];
+			let autorLivros: AutorLivrosType = {
+				id: result.rows[0].id_autor,
+				nome: result.rows[0].nome_autor as string,
+				idade: result.rows[0].idade,
+				livros: livros,
+			};
 
-		for (const autor of result.rows) {
-			livros.push({
-				id: autor.id,
-				nome: autor.nome,
-				genero: autor.genero,
-				editora: autor.editora,
-				data_publicacao: autor.data_publicacao,
-			});
+			return autorLivros;
 		}
-		autorLivros.livro = livros;
 
-		return autorLivros;
+		return undefined;
 	}
 
 	async saveBook({

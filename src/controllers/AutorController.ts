@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { ApiError } from "../helpers/api-errors";
+import { NotFoundError } from "../helpers";
 import { Autor, AutorSchema, Livro, LivroSchema } from "../schemas";
 import { AutorServices } from "../services/AutorServices";
 
@@ -32,8 +32,9 @@ class AutorController {
 		const autor = await autorServices.getByIdAutor(Number(id));
 
 		if (!autor) {
-			throw new ApiError("Autor não encontrado.", 404);
+			throw new NotFoundError("Autor não encontrado.");
 		}
+
 		return res.status(200).json(autor);
 	}
 

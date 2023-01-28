@@ -1,3 +1,3 @@
-import { ApiError } from "./api-errors";
+import { ApiError, BadRequestError, NotFoundError } from "./api-errors";
 
-export { ApiError };
+export { ApiError, BadRequestError, NotFoundError };
