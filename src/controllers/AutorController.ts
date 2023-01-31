@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { NotFoundError } from "../helpers";
+import { BadRequestError, NotFoundError } from "../errors";
 import { Autor, AutorSchema, Livro, LivroSchema } from "../schemas";
 import { AutorServices } from "../services/AutorServices";
 
@@ -29,10 +29,15 @@ class AutorController {
 
 	async show(req: Request, res: Response) {
 		const id = req.params.id;
+
+		if (!id || id === "") {
+			throw new BadRequestError("O id é obrigatório");
+		}
+
 		const autor = await autorServices.getByIdAutor(Number(id));
 
 		if (!autor) {
-			throw new NotFoundError("Autor não encontrado.");
+			throw new NotFoundError("Livro não encontrado.");
 		}
 
 		return res.status(200).json(autor);
@@ -45,7 +50,7 @@ class AutorController {
 			nome,
 			genero,
 			editora,
-			dataPublicacao: new Date(data_publicacao),
+			data_publicacao: new Date(data_publicacao),
 			idAutor: Number(id),
 		});
 
@@ -58,7 +63,6 @@ class AutorController {
 
 		const novoLivro = await autorServices.saveBook(livro.data);
 
-		console.log(novoLivro);
 		res.status(201).json({ novoLivro });
 	}
 

@@ -1,0 +1,254 @@
+{
+	"openapi": "3.0.0",
+	"info": {
+		"title": "API para conectar com banco de dados postgreSQL",
+		"description": "Essa API é uma atividade da Cubos Academy",
+		"contact": {
+			"name": "Gilson Alves",
+			"email": "gilsonalvesdesouza@hotmail.com"
+		},
+		"version": "1.0.0"
+	},
+	"paths": {
+		"/autor": {
+			"get": {
+				"description": "Buscar todos os autores",
+				"tags": [
+					"Autores"
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/RequestAutor"
+									}
+								}
+							}
+						}
+					},
+					"204": {
+						"description": "sem conteudo"
+					}
+				}
+			},
+			"post": {
+				"description": "Criação de um autor",
+				"tags": [
+					"Autores"
+				],
+				"requestBody": {
+					"description": "Dados necessários para cadastro de um autor",
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/RequestAutor"
+							}
+						}
+					}
+				},
+				"responses": {
+					"201": {
+						"description": "Created",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/RequestAutor"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Bad Request"
+					}
+				}
+			}
+		},
+		"/autor/{id}": {
+			"get": {
+				"description": "Buscar um autor pelo ID",
+				"tags": [
+					"Autores"
+				],
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"description": "ID do autor",
+						"required": true,
+						"format": "number"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/RequestAutorById"
+									}
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Not Found"
+					}
+				}
+			}
+		},
+		"/livro": {
+			"get": {
+				"description": "Buscar todos os livros",
+				"tags": [
+					"Autores"
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/RequestLivros"
+									}
+								}
+							}
+						}
+					},
+					"204": {
+						"description": "sem conteudo"
+					}
+				}
+			}
+		}
+	},
+	"components": {
+		"schemas": {
+			"RequestAutor": {
+				"type": "object",
+				"properties": {
+					"nome": {
+						"description": "nome do autor",
+						"type": "string",
+						"required": true,
+						"example": "fulano"
+					},
+					"idade": {
+						"description": "idade do autor",
+						"type": "number",
+						"example": 20
+					}
+				}
+			},
+			"RequestAutorById": {
+				"type": "object",
+				"properties": {
+					"id": {
+						"description": "id do autor",
+						"type": "number",
+						"example": 1
+					},
+					"nome": {
+						"description": "nome do autor",
+						"type": "string",
+						"example": "Guido Cerqueira"
+					},
+					"idade": {
+						"description": "idade do autor",
+						"type": "number"
+					},
+					"livros": {
+						"type": "array",
+						"items": {
+							"type": "object",
+							"properties": {
+								"id": {
+									"description": "id do livro",
+									"type": "number",
+									"example": 1
+								},
+								"nome": {
+									"description": "nome do livro",
+									"type": "string",
+									"example": "Backend Nodejs"
+								},
+								"genero": {
+									"description": "genero do livro",
+									"type": "string",
+									"example": "Programação"
+								},
+								"editora": {
+									"description": "genero do livro",
+									"type": "string",
+									"example": "Cubos Academy"
+								},
+								"data_publicacao": {
+									"description": "genero do livro",
+									"type": "string",
+									"example": "2020-10-18"
+								}
+							}
+						}
+					}
+				}
+			},
+			"RequestLivros": {
+				"type": "object",
+				"properties": {
+					"id": {
+						"description": "id do livro",
+						"type": "number",
+						"example": 1
+					},
+					"nome": {
+						"description": "nome do livro",
+						"type": "string",
+						"required": true,
+						"example": "Backend PHP"
+					},
+					"genero": {
+						"description": "genero do livro",
+						"type": "string",
+						"example": "Programação"
+					},
+					"editora": {
+						"description": "genero do livro",
+						"type": "string",
+						"example": "Cubos Academy"
+					},
+					"data_publicacao": {
+						"description": "genero do livro",
+						"type": "string",
+						"example": "2020-10-18"
+					},
+					"autor": {
+						"type": "object",
+						"properties": {
+							"id": {
+								"description": "id do autor",
+								"type": "number",
+								"example": 1
+							},
+							"nome": {
+								"description": "nome do autor",
+								"type": "string",
+								"example": "Guido Cerqueira"
+							},
+							"idade": {
+								"description": "idade do autor",
+								"type": "number"
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}

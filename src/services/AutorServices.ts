@@ -8,6 +8,11 @@ class AutorServices {
 		return autores;
 	}
 
+	/**
+	 * Função para salvar um Autor
+	 * @param param0
+	 * @returns
+	 */
 	async save({ nome, idade }: Autor) {
 		const query = `insert into autores (nome, idade) values($1, $2) returning *;`;
 
@@ -17,6 +22,11 @@ class AutorServices {
 		return autor;
 	}
 
+	/**
+	 * Função para buscar o autor pelo id
+	 * @param id
+	 * @returns Promise<AutorLivrosType | undefined>
+	 */
 	async getByIdAutor(id: number) {
 		const query = `select a.nome as nome_autor, a.idade, l.* from autores a 
 		join livros l on l.id_autor = a.id where a.id = $1`;
@@ -30,15 +40,15 @@ class AutorServices {
 				livros: Partial<Array<Livro>>;
 			};
 
-			let livros: any = [];
+			let livros: Partial<Array<Livro>> = [];
 			for (const livro of result.rows) {
 				livros.push({
-					id: livro.id,
-					nome: livro.nome,
-					genero: livro.genero,
-					editora: livro.editora,
-					data_publicacao: livro.data_publicacao,
-				});
+					id: Number(livro.id),
+					nome: livro.nome as string,
+					genero: livro.genero as string,
+					editora: livro.editora as string,
+					data_publicacao: livro.data_publicacao as Date,
+				} as Livro);
 			}
 
 			let autorLivros: AutorLivrosType = {
@@ -47,7 +57,6 @@ class AutorServices {
 				idade: result.rows[0].idade,
 				livros: livros,
 			};
-
 			return autorLivros;
 		}
 
