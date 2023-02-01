@@ -8,7 +8,7 @@ const router = Router();
 router.get("/autor", autorController.index);
 router.post("/autor", autorController.store);
 router.get("/autor/:id", autorController.show);
-router.post("/autor/:id/livro", autorController.createBook);
-router.get("/livro", autorController.showBook);
+// router.post("/autor/:id/livro", autorController.createBook);
+// router.get("/livro", autorController.showBook);
 
 export { router };

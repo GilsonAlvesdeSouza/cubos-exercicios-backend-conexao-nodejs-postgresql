@@ -1,9 +1,13 @@
 import { Request, Response } from "express";
 import { BadRequestError, NotFoundError } from "../errors";
 import { Autor, AutorSchema, Livro, LivroSchema } from "../schemas";
-import { AutorServices } from "../services/AutorServices";
+import AutorServices from "../services/AutorServices";
+("../services/AutorServices");
+import AutorServicesPg from "../services/pg/AutorServicesPg";
+// import { AutorServices } from "../servicesAjeitar/AutorServices";
 
-const autorServices = new AutorServices();
+// const autorServices = new AutorServices();
+const autorServices = new AutorServices(new AutorServicesPg());
 
 class AutorController {
 	async index(req: Request, res: Response) {
@@ -22,7 +26,7 @@ class AutorController {
 			return res.status(400).json({ mensagem: autor.error.issues[0].message });
 		}
 
-		const novoAutor = await autorServices.save(autor.data);
+		const novoAutor = await autorServices.create(autor.data);
 
 		return res.status(201).json(novoAutor);
 	}
@@ -34,42 +38,42 @@ class AutorController {
 			throw new BadRequestError("O id é obrigatório");
 		}
 
-		const autor = await autorServices.getByIdAutor(Number(id));
+		const autor = await autorServices.findAutorLivro(Number(id));
 
 		if (!autor) {
-			throw new NotFoundError("Livro não encontrado.");
+			throw new NotFoundError("Autor não encontrado ou não possui livro");
 		}
 
 		return res.status(200).json(autor);
 	}
 
-	async createBook(req: Request, res: Response) {
-		const id = req.params.id;
-		const { nome, genero, editora, data_publicacao }: Livro = req.body;
-		const livro = LivroSchema.safeParse({
-			nome,
-			genero,
-			editora,
-			data_publicacao: new Date(data_publicacao),
-			idAutor: Number(id),
-		});
+	// async createBook(req: Request, res: Response) {
+	// 	const id = req.params.id;
+	// 	const { nome, genero, editora, data_publicacao }: Livro = req.body;
+	// 	const livro = LivroSchema.safeParse({
+	// 		nome,
+	// 		genero,
+	// 		editora,
+	// 		data_publicacao: new Date(data_publicacao),
+	// 		idAutor: Number(id),
+	// 	});
 
-		if (!livro.success) {
-			if (livro.error.issues[0].message === "Invalid date") {
-				return res.status(400).json({ mensagem: "Data invalida" });
-			}
-			return res.status(400).json({ mensagem: livro.error.issues[0].message });
-		}
+	// 	if (!livro.success) {
+	// 		if (livro.error.issues[0].message === "Invalid date") {
+	// 			return res.status(400).json({ mensagem: "Data invalida" });
+	// 		}
+	// 		return res.status(400).json({ mensagem: livro.error.issues[0].message });
+	// 	}
 
-		const novoLivro = await autorServices.saveBook(livro.data);
+	// 	const novoLivro = await autorServices.saveBook(livro.data);
 
-		res.status(201).json({ novoLivro });
-	}
+	// 	res.status(201).json({ novoLivro });
+	// }
 
-	async showBook(req: Request, res: Response) {
-		const livros = await autorServices.allBooks();
-		res.status(200).json(livros);
-	}
+	// async showBook(req: Request, res: Response) {
+	// 	const livros = await autorServices.allBooks();
+	// 	res.status(200).json(livros);
+	// }
 }
 
 export { AutorController };
