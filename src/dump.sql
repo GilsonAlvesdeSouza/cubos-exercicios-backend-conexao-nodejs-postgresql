@@ -2,7 +2,7 @@ create database bibliteca;
 
 create table autores(
 	id serial primary key,
-	nome varchar(100),
+	nome varchar(100) not null,
 	idade int
 );
 
@@ -12,7 +12,7 @@ create table livros(
 	genero varchar(50),
 	editora varchar(50),
 	data_publicacao date,
-	id_autor int
+	id_autor int not null
 );
 
 alter table livros add constraint FK_LIVROS_AUTOR

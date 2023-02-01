@@ -3,7 +3,7 @@ import Autor from "../../models/base/Autor";
 import Livro from "../../models/base/Livro";
 import AutorServicesInterface from "../base/AutorServicesInterface";
 
-class AutorServicesPg implements AutorServicesInterface {
+class AutorServicesPG implements AutorServicesInterface {
 	async all(): Promise<Array<Autor>> {
 		const query = `select * from autores;`;
 		const result = await dbConnect.query(query);
@@ -42,19 +42,19 @@ class AutorServicesPg implements AutorServicesInterface {
 		join livros l on l.id_autor = a.id where a.id = $1`;
 		const params = [id];
 		const result = await dbConnect.query(query, params);
-		const livros: Partial<Array<Livro>> = [];
 
 		if (result.rows.length === 0) {
 			return undefined;
 		}
 
+		const livros: Array<Livro> = [];
 		for (const livro of result.rows) {
 			livros.push({
-				id: Number(livro.id),
-				nome: livro.nome as string,
-				genero: livro.genero as string,
-				editora: livro.editora as string,
-				data_publicacao: livro.data_publicacao as Date,
+				id: livro.id,
+				nome: livro.nome,
+				genero: livro.genero,
+				editora: livro.editora,
+				data_publicacao: livro.data_publicacao,
 			} as Livro);
 		}
 
@@ -69,4 +69,4 @@ class AutorServicesPg implements AutorServicesInterface {
 	}
 }
 
-export default AutorServicesPg;
+export default AutorServicesPG;

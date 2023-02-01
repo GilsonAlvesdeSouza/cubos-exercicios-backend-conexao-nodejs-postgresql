@@ -1,5 +1,5 @@
 import Autor from "../models/base/Autor";
-import { AutorServicesInterface } from "./base/AutorServicesInterface";
+import AutorServicesInterface from "./base/AutorServicesInterface";
 
 class AutorServices {
 	private repository: AutorServicesInterface;

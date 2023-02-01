@@ -31,7 +31,7 @@ const LivroSchema = z.object({
 		invalid_type_error: "A data da publicação no formato YYYY-MM-DD.",
 	}),
 
-	idAutor: z.number({
+	id_autor: z.number({
 		required_error: "O campo de identificação do autor é obrigatório.",
 		invalid_type_error: "O identificador precisa ser um número.",
 	}),
